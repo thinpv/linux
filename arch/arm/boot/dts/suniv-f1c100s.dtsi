@@ -73,8 +73,8 @@
 		};
 
 		spi0: spi@1c05000 {
-			compatible = "allwinner,suniv-spi",
-				     "allwinner,sun8i-h3-spi";
+			compatible = "allwinner,suniv-f1c100s-spi",
+			             "allwinner,sun8i-h3-spi";
 			reg = <0x01c05000 0x1000>;
 			interrupts = <10>;
 			clocks = <&ccu CLK_BUS_SPI0>, <&ccu CLK_BUS_SPI0>;
@@ -86,8 +86,8 @@
 		};
 
 		spi1: spi@1c06000 {
-			compatible = "allwinner,suniv-spi",
-				     "allwinner,sun8i-h3-spi";
+			compatible = "allwinner,suniv-f1c100s-spi",
+					"allwinner,sun8i-h3-spi";
 			reg = <0x01c06000 0x1000>;
 			interrupts = <11>;
 			clocks = <&ccu CLK_BUS_SPI1>, <&ccu CLK_BUS_SPI1>;
@@ -104,8 +104,7 @@
 			interrupts = <29>;
 			clocks = <&ccu CLK_BUS_LCD>,
 				 <&ccu CLK_TCON>;
-			clock-names = "ahb",
-				      "tcon-ch0";
+			clock-names = "ahb", "tcon-ch0";
 			clock-output-names = "tcon-pixel-clock";
 			resets = <&ccu RST_BUS_LCD>;
 			reset-names = "lcd";
@@ -177,13 +176,37 @@
 			i2c0_pins: i2c0 {
 				pins = "PE11", "PE12";
 				function = "i2c0";
-            };
+			};
 
 			uart0_pe_pins: uart0-pe-pins {
 				pins = "PE0", "PE1";
 				function = "uart0";
 			};
-			
+
+			uart1_pa_pins: uart1-pa-pins {
+				pins = "PA2", "PA3";
+				function = "uart1";
+			};
+
+			spi0_pc_pins: spi0-pc-pins {
+				pins = "PC0", "PC1", "PC2", "PC3";
+				function = "spi0";
+			};
+
+			spi1_pa_pins: spi1-pa-pins {
+				pins = "PA0", "PA1", "PA2", "PA3";
+				function = "spi1";
+			};
+
+			lcd_rgb565_pins: lcd-rgb565-pins {
+				pins = "PD1", "PD2", "PD3", "PD4",
+				       "PD5", "PD6", "PD7", "PD8", "PD9",
+				       "PD10", "PD11", "PD13", "PD14",
+				       "PD15", "PD16", "PD17", "PD18", "PD19",
+				       "PD20", "PD21";
+				function = "lcd";
+			};
+
 			lcd_rgb666_pins: lcd-rgb666-pins {
 				pins = "PD0", "PD1", "PD2", "PD3", "PD4",
 				       "PD5", "PD6", "PD7", "PD8", "PD9",
@@ -196,11 +219,6 @@
 			mmc0_pins: mmc0-pins {
 				pins = "PF0", "PF1", "PF2", "PF3", "PF4", "PF5";
 				function = "mmc0";
-			};
-
-			spi0_pins_a: spi0-pins-pc {
-				pins = "PC0", "PC1", "PC2", "PC3";
-				function = "spi0";
 			};
 		};
 
@@ -219,10 +237,7 @@
 				 <&ccu CLK_MMC0>,
 				 <&ccu CLK_MMC0_OUTPUT>,
 				 <&ccu CLK_MMC0_SAMPLE>;
-			clock-names = "ahb",
-					      "mmc",
-					      "output",
-				    	  "sample";
+			clock-names = "ahb", "mmc", "output", "sample";
 			resets = <&ccu RST_BUS_MMC0>;
 			reset-names = "ahb";
 			interrupts = <23>;
@@ -245,7 +260,7 @@
 			interrupts = <22>;
 			status = "disabled";
 		};
-
+    
 		uart0: serial@1c25000 {
 			compatible = "snps,dw-apb-uart";
 			reg = <0x01c25000 0x400>;
@@ -279,14 +294,39 @@
 			status = "disabled";
 		};
 
+		usb_otg: usb@1c13000 {
+			compatible = "allwinner,suniv-f1c100s-musb";
+			reg = <0x01c13000 0x0400>;
+			clocks = <&ccu CLK_BUS_OTG>;
+			resets = <&ccu RST_BUS_OTG>;
+			interrupts = <26>;
+			interrupt-names = "mc";
+			phys = <&usbphy 0>;
+			phy-names = "usb";
+			extcon = <&usbphy 0>;
+			allwinner,sram = <&otg_sram 1>;
+			status = "disabled";
+		};
+
+		usbphy: phy@1c13400 {
+			compatible = "allwinner,suniv-f1c100s-usb-phy";
+			reg = <0x01c13400 0x10>;
+			reg-names = "phy_ctrl";
+			clocks = <&ccu CLK_USB_PHY0>;
+			clock-names = "usb0_phy";
+			resets = <&ccu RST_USB_PHY0>;
+			reset-names = "usb0_reset";
+			#phy-cells = <1>;
+			status = "disabled";
+		};
+
 		fe0: display-frontend@1e00000 {
 			compatible = "allwinner,suniv-f1c100s-display-frontend";
 			reg = <0x01e00000 0x20000>;
 			interrupts = <30>;
 			clocks = <&ccu CLK_BUS_DE_FE>, <&ccu CLK_DE_FE>,
 				 <&ccu CLK_DRAM_DE_FE>;
-			clock-names = "ahb", "mod",
-				      "ram";
+			clock-names = "ahb", "mod","ram";
 			resets = <&ccu RST_BUS_DE_FE>;
 			status = "disabled";
 
@@ -314,8 +354,7 @@
 			interrupts = <31>;
 			clocks = <&ccu CLK_BUS_DE_BE>, <&ccu CLK_DE_BE>,
 				 <&ccu CLK_DRAM_DE_BE>;
-			clock-names = "ahb", "mod",
-				      "ram";
+			clock-names = "ahb", "mod", "ram";
 			resets = <&ccu RST_BUS_DE_BE>;
 			reset-names = "be";
 			assigned-clocks = <&ccu CLK_DE_BE>;
