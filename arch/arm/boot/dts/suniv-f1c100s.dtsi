@@ -198,6 +198,11 @@
 				function = "spi1";
 			};
 
+			spi1_pe_pins: spi1-pe-pins {
+				pins = "PE7", "PE8", "PE9", "PE10";
+				function = "spi1";
+			};
+
 			lcd_rgb565_pins: lcd-rgb565-pins {
 				pins = "PD1", "PD2", "PD3", "PD4",
 				       "PD5", "PD6", "PD7", "PD8", "PD9",

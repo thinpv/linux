@@ -132,6 +132,12 @@
   };
 };
 
+&spi1 {
+  pinctrl-names = "default";
+  pinctrl-0 = <&spi1_pe_pins>;
+  status = "okay";
+};
+
 &usb_otg {
 	dr_mode = "otg";	// peripheral | otg | host
 	status = "okay";
